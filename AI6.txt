@@ -1,0 +1,115 @@
+class MedicalExpertSystem:
+    def __init__(self):
+        self.diseases = {
+            "Flu": {
+                "fever": True,
+                "cough": True,
+                "sore_throat": True,
+                "body_aches": True,
+                "fatigue": True
+            },
+            "Cold": {
+                "fever": False,
+                "cough": True,
+                "sore_throat": True,
+                "body_aches": False,
+                "fatigue": True
+            },
+            "Pneumonia": {
+                "fever": True,
+                "cough": True,
+                "sore_throat": False,
+                "body_aches": True,
+                "fatigue": True
+            },
+            "COVID-19": {
+                "fever": True,
+                "cough": True,
+                "sore_throat": True,
+                "body_aches": True,
+                "fatigue": True
+            },
+            "Malaria": {
+                "fever": True,
+                "cough": False,
+                "sore_throat": False,
+                "body_aches": True,
+                "fatigue": True
+            },
+            "Tuberculosis": {
+                "fever": True,
+                "cough": True,
+                "sore_throat": False,
+                "body_aches": True,
+                "fatigue": True
+            },
+            "Diabetes": {
+                "fever": False,
+                "cough": False,
+                "sore_throat": False,
+                "body_aches": False,
+                "fatigue": True
+            },
+            "Chronic Fatigue Syndrome": {
+                "fever": False,
+                "cough": False,
+                "sore_throat": False,
+                "body_aches": True,
+                "fatigue": True
+            },
+            "Strep Throat": {
+                "fever": True,
+                "cough": False,
+                "sore_throat": True,
+                "body_aches": False,
+                "fatigue": True
+            },
+            "Hepatitis": {
+                "fever": True,
+                "cough": False,
+                "sore_throat": False,
+                "body_aches": True,
+                "fatigue": True
+            }
+        }
+
+    def ask_symptoms(self):
+        symptoms = {
+            "fever": None,
+            "cough": None,
+            "sore_throat": None,
+            "body_aches": None,
+            "fatigue": None
+        }
+
+        print("Please answer the following questions with Yes or No:")
+
+        for symptom in symptoms:
+            answer = input(f"Do you have {symptom.replace('_', ' ')}? (Yes/No): ").strip().lower()
+            symptoms[symptom] = True if answer == "yes" else False
+
+        return symptoms
+
+    def diagnose(self, symptoms):
+        matching_diseases = []
+
+        for disease, disease_symptoms in self.diseases.items():
+            match = True
+            for symptom, value in disease_symptoms.items():
+                if symptoms[symptom] != value:
+                    match = False
+                    break
+            if match:
+                matching_diseases.append(disease)
+
+        if matching_diseases:
+            print("\nBased on your symptoms, the possible diseases could be:")
+            for disease in matching_diseases:
+                print(f"- {disease}")
+        else:
+            print("\nNo matching diseases found. Please consult a medical professional for further evaluation.")
+
+if __name__ == "__main__":
+    expert_system = MedicalExpertSystem()
+    user_symptoms = expert_system.ask_symptoms()
+    expert_system.diagnose(user_symptoms)

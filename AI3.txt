@@ -1,0 +1,86 @@
+import heapq
+
+# ---------- Selection Sort (Greedy) ----------
+def selection_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        min_index = i
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_index]:
+                min_index = j
+        arr[i], arr[min_index] = arr[min_index], arr[i]
+    return arr
+
+# ---------- Prim's Algorithm (Greedy MST) ----------
+def prims_mst(graph, num_vertices, start=0):
+    visited = [False] * num_vertices
+    min_heap = [(0, start, -1)]  # (weight, vertex, parent)
+    mst = []
+    total_cost = 0
+
+    while min_heap:
+        weight, u, parent = heapq.heappop(min_heap)
+        if visited[u]:
+            continue
+        visited[u] = True
+        if parent != -1:
+            mst.append((parent, u, weight))
+            total_cost += weight
+        for v, w in graph[u]:
+            if not visited[v]:
+                heapq.heappush(min_heap, (w, v, u))
+
+    return mst, total_cost
+
+# ---------- Main Function ----------
+def main():
+    print("🔁 Greedy Algorithm Demo")
+
+    # --- Part 1: Selection Sort ---
+    print("\n➡️ Selection Sort")
+    arr = list(map(int, input("Enter elements of the array (space-separated): ").split()))
+    print("Original array:", arr)
+    sorted_arr = selection_sort(arr.copy())
+    print("Sorted array using Greedy Selection Sort:", sorted_arr)
+
+    # --- Part 2: Prim's Algorithm ---
+    print("\n➡️ Prim's Algorithm for Minimum Spanning Tree")
+    num_vertices = int(input("Enter the number of vertices in the graph: "))
+    num_edges = int(input("Enter the number of edges in the graph: "))
+
+    # Initialize empty graph as adjacency list
+    graph = {i: [] for i in range(num_vertices)}
+
+    print("Enter each edge in the format: u v weight")
+    for _ in range(num_edges):
+        u, v, w = map(int, input().split())
+        graph[u].append((v, w))
+        graph[v].append((u, w))  # Undirected graph
+
+    start_node = int(input("Enter the starting vertex (0-based index): "))
+    mst, total_cost = prims_mst(graph, num_vertices, start_node)
+
+    print("\nEdges in the Minimum Spanning Tree:")
+    for u, v, weight in mst:
+        print(f"{u} - {v} : {weight}")
+    print("Total weight of MST:", total_cost)
+
+# Run the program
+if __name__ == "__main__":
+    main()
+
+
+/*
+Prim's Algorithm for Minimum Spanning Tree
+Enter the number of vertices in the graph: 5
+Enter the number of edges in the graph: 7
+Enter each edge in the format: u v weight
+0 1 2
+0 3 6
+1 2 3
+1 3 8
+1 4 5
+2 4 7
+3 4 9
+Enter the starting vertex (0-based index): 0
+*/

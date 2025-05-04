@@ -1,0 +1,39 @@
+def get_bot_response(user_input):
+    user_input = user_input.lower()
+    if "courses" in user_input:
+        return (
+            "We offer a variety of courses including:\n"
+            "\t- Engineering\n"
+            "\t- Pharma\n"
+            "\t- Management\n"
+            "\t- C-DAC\n"
+            "\t- MCA\n"
+            "- Please visit our website for more details."
+        )
+    elif "fees" in user_input:
+        return "The fee structure varies for each course. Please visit our website or contact our admissions department for detailed information."
+    elif "faculty" in user_input:
+        return "We have a highly qualified and experienced faculty who are experts in their respective fields."
+    elif "features" in user_input:
+        return "Our courses provide comprehensive knowledge and practical skills including hands-on projects, interactive materials, and expert guidance."
+    elif "contact" in user_input:
+        return "For further assistance, please visit our official website or reach out to our admissions office."
+    else:
+        return "I'm sorry, I didn't understand. Could you please rephrase or ask another question?"
+
+def main():
+    print("----Welcome to MET-BKC----\n")
+    print("How can I assist you today?")
+
+    while True:
+        user_input = input("User: ")
+        if user_input.lower() == "bye":
+            print("Chatbot: Goodbye! Have a nice day!")
+            break
+
+        response = get_bot_response(user_input)
+        print("Chatbot:", response)
+
+# Run the chatbot
+if __name__ == "__main__":
+    main()

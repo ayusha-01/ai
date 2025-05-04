@@ -1,0 +1,97 @@
+import heapq
+
+# Direction vectors for moving up, down, left, right
+DIRECTION_VECTORS = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # (row_change, col_change)
+
+# Function to calculate the Manhattan Distance for a tile
+def manhattan_distance(state, goal_state):
+    distance = 0
+    for i in range(9):
+        if state[i] == 0:
+            continue  # skip the blank space
+        goal_position = goal_state.index(state[i])
+        current_row, current_col = divmod(i, 3)
+        goal_row, goal_col = divmod(goal_position, 3)
+        distance += abs(current_row - goal_row) + abs(current_col - goal_col)
+    return distance
+
+# Function to generate valid neighbors of the current state
+def get_neighbors(state):
+    neighbors = []
+    zero_pos = state.index(0)
+    zero_row, zero_col = divmod(zero_pos, 3)
+
+    for dr, dc in DIRECTION_VECTORS:
+        new_row, new_col = zero_row + dr, zero_col + dc
+        if 0 <= new_row < 3 and 0 <= new_col < 3:
+            new_pos = new_row * 3 + new_col
+            new_state = list(state)
+            new_state[zero_pos], new_state[new_pos] = new_state[new_pos], new_state[zero_pos]
+            neighbors.append(tuple(new_state))
+
+    return neighbors
+
+# A* Algorithm Implementation
+def a_star(initial_state, goal_state):
+    open_list = []
+    heapq.heappush(open_list, (manhattan_distance(initial_state, goal_state), 0, initial_state, []))  # (f(n), g(n), state, path)
+    closed_set = set()
+
+    while open_list:
+        f, g, current_state, path = heapq.heappop(open_list)
+        
+        # Print the current puzzle state with its h value (Manhattan Distance)
+        print(f"\nCurrent Puzzle (h-value = {f - g}):")
+        for i in range(0, 9, 3):
+            print(current_state[i:i+3])
+        
+        # If we reached the goal state, return the solution path
+        if current_state == goal_state:
+            return path + [current_state]
+        
+        # If this state has already been explored, skip it
+        if current_state in closed_set:
+            continue
+        
+        closed_set.add(current_state)
+
+        # Generate neighbors and push them to the open list
+        for neighbor in get_neighbors(current_state):
+            if neighbor not in closed_set:
+                new_g = g + 1
+                new_f = new_g + manhattan_distance(neighbor, goal_state)
+                heapq.heappush(open_list, (new_f, new_g, neighbor, path + [current_state]))
+
+    return None  # If no solution exists
+
+# Main
+if __name__ == "__main__":
+    # Get initial state from the user
+    print("Enter the initial state (9 values separated by spaces, use 0 for blank space):")
+    initial_state_input = list(map(int, input().split()))
+    initial_state = tuple(initial_state_input)
+
+    # Get goal state from the user
+    print("Enter the goal state (9 values separated by spaces, use 0 for blank space):")
+    goal_state_input = list(map(int, input().split()))
+    goal_state = tuple(goal_state_input)
+
+    # Run A* algorithm
+    solution_path = a_star(initial_state, goal_state)
+
+    # Print solution if found
+    if solution_path:
+        print("\nSolution found:")
+        for step in solution_path:
+            for i in range(0, 9, 3):
+                print(step[i:i+3])
+            print()  # Blank line between steps
+        print(f"Solution length: {len(solution_path) - 1}")
+    else:
+        print("No solution found.")
+
+
+/*
+1 2 3 4 0 6 7 5 8
+1 2 3 4 5 6 7 8 0
+*/

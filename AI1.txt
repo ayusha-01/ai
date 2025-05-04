@@ -1,0 +1,63 @@
+from collections import defaultdict, deque
+
+class Graph:
+    def __init__(self):
+        self.graph = defaultdict(list)
+
+    def add_edge(self, u, v):
+        # Since the graph is undirected, add both directions
+        self.graph[u].append(v)
+        self.graph[v].append(u)
+
+    def dfs_recursive(self, node, visited):
+        visited.add(node)
+        print(node, end=" ")
+        for neighbor in self.graph[node]:
+            if neighbor not in visited:
+                self.dfs_recursive(neighbor, visited)
+
+    def bfs(self, start):
+        visited = set()
+        queue = deque([start])
+        visited.add(start)
+
+        while queue:
+            node = queue.popleft()
+            print(node, end=" ")
+            for neighbor in self.graph[node]:
+                if neighbor not in visited:
+                    queue.append(neighbor)
+                    visited.add(neighbor)
+
+# --------- USER INPUT SECTION -------------
+graph = Graph()
+
+# Number of edges
+n = int(input("Enter the number of edges: "))
+print("Enter edges (node1 node2):")
+for _ in range(n):
+    u, v = input().split()
+    graph.add_edge(u, v)
+
+start_node = input("Enter the starting node for traversal: ")
+
+# Perform DFS
+print("\nDepth First Search (DFS) traversal:")
+graph.dfs_recursive(start_node, set())
+Enter the number of edges: 6
+Enter edges (node1 node2):
+A B
+A C
+B D
+B E
+C F
+E F
+Enter the starting node for traversal: A
+
+# Perform BFS
+print("\n\nBreadth First Search (BFS) traversal:")
+graph.bfs(start_node)
+
+/*
+
+*/
