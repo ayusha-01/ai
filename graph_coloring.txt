@@ -1,0 +1,60 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Function to check if current color assignment is valid
+bool isSafe(int node, vector<vector<int>>& graph, vector<int>& color, int c) {
+    for (int i = 0; i < graph.size(); i++) {
+        if (graph[node][i] && color[i] == c)
+            return false;
+    }
+    return true;
+}
+
+// Recursive function to solve the coloring problem
+bool solve(int node, vector<vector<int>>& graph, vector<int>& color, int m) {
+    if (node == graph.size())
+        return true;
+
+    for (int c = 1; c <= m; c++) {
+        if (isSafe(node, graph, color, c)) {
+            color[node] = c;
+            if (solve(node + 1, graph, color, m))
+                return true;
+            color[node] = 0; // Backtrack
+        }
+    }
+    return false;
+}
+
+// Main function to check if the coloring is possible
+bool graphColoring(vector<vector<int>>& graph, int m) {
+    int n = graph.size();
+    vector<int> color(n, 0);
+
+    if (solve(0, graph, color, m)) {
+        cout << "Solution exists. Vertex colors:\n";
+        for (int c : color)
+            cout << c << " ";
+        cout << endl;
+        return true;
+    } else {
+        cout << "No solution exists with " << m << " colors.\n";
+        return false;
+    }
+}
+
+int main() {
+    // Example graph represented using adjacency matrix
+    vector<vector<int>> graph = {
+        {0, 1, 1, 1},
+        {1, 0, 1, 0},
+        {1, 1, 0, 1},
+        {1, 0, 1, 0}
+    };
+
+    int m = 3; // Number of colors
+    graphColoring(graph, m);
+
+    return 0;
+}
